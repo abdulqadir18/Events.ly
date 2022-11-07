@@ -260,11 +260,28 @@ app.post('/users/event_add', function(req,res){
 });
 
 app.post('/users/event_edit', function (req, res) {
+    console.log("edit");
+    console.log(req.body.id);
     pool.connect(function(err,client,done){
       if(err){
         return console.error('Error fetching client from pool',err);
       }
       client.query('UPDATE event SET event_name = $1, event_description = $2 WHERE event_id = $3', [req.body.name, req.body.description, req.body.id],function(err,result){
+        done();
+        res.redirect('/users/event');
+      });
+    });
+});
+
+app.post('/users/event_participants', function (req, res) {
+    console.log('participants');
+    console.log(req.body.participants);
+    console.log(req.body.id);
+    pool.connect(function(err,client,done){
+      if(err){
+        return console.error('Error fetching client from pool',err);
+      }
+      client.query('UPDATE event SET event_participants = $1, invite_status = $2 WHERE event_id = $3', [req.body.participants, 0, req.body.id],function(err,result){
         done();
         res.redirect('/users/event');
       });
@@ -279,6 +296,7 @@ app.delete('/users/event_delete/:id', function(req, res){
       client.query('DELETE FROM event WHERE event_id = $1', [req.params.id],function(err,result){
         done();
         console.log("hey");
+        res.redirect('/users/event');
         res.send("DELETE Request Called");
       });
     });
@@ -293,12 +311,55 @@ app.post('/users/profile_add', function(req,res){
       if(err){
         return console.error('Error fetching client from pool',err);
       }
-      client.query('INSERT INTO service_provider(sp_type, sp_speciality, sp_headline, sp_description) VALUES($1, $2, $3, $4)', [req.body.sp_type, req.body.sp_speciality, req.body.sp_headline, req.body.sp_description],function(err,result){
+      client.query('INSERT INTO service_provider(sp_username, sp_type, sp_speciality, sp_headline, sp_description) VALUES($1, $2, $3, $4, $5)', [req.body.sp_type, req.body.sp_speciality, req.body.sp_headline, req.body.sp_description],function(err,result){
         done();
         res.redirect('/users/dashboard');
       });
     });
 });
+
+app.get('/users/invite', function(req, res){
+  //PG connect
+  pool.connect(function(err,client,done){
+    if(err){
+      return console.error('Error fetching client from pool',err);
+    }
+    client.query("SELECT * from event WHERE event_participants = 'Khan'",function(err,result){
+      if(err){
+        return console.error('Error running query',err);
+      }
+      res.render('invite',{event: result.rows});
+      done();
+    });
+  });
+});
+
+app.post('/users/invite_accept', function (req, res) {
+  console.log(req.body.id);
+    pool.connect(function(err,client,done){
+      if(err){
+        return console.error('Error fetching client from pool',err);
+      }
+      client.query("UPDATE event SET invite_status = 1 WHERE event_id = $1 AND event_participants = 'Khan'", [req.body.id],function(err,result){
+        done();
+        res.redirect('/users/invite');
+      });
+    });
+});
+
+app.post('/users/invite_reject', function (req, res) {
+  console.log(req.body.id);
+    pool.connect(function(err,client,done){
+      if(err){
+        return console.error('Error fetching client from pool',err);
+      }
+      client.query("UPDATE event SET invite_status = -1 WHERE event_id = $1 AND event_participants = 'Khan'", [req.body.id],function(err,result){
+        done();
+        res.redirect('/users/invite');
+      });
+    });
+});
+
 
 app.listen(PORT, () => {
     console.log('Server running on port',PORT);

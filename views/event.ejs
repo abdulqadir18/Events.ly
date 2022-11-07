@@ -78,11 +78,20 @@
           <div class="collapse" id="event_<%= entry.event_id %>">
               <br/>
               <br/>
+              <% if(entry.invite_status >0){ %>
+                  <p><strong>Participants: </strong>
+                      <br/><%= entry.event_participants %>
+                  </p>
+                  <br/>
+                  <br/>
+              <% } %>
               <p><strong>Description: </strong>
                   <br/><%= entry.event_description %>
               </p>
               <br/>
               <hr/>
+              <button type="button" name="button" class="btn btn-success participants-event" data-toggle="modal"
+              data-target="#participantsFormModal" data-id="<%= entry.event_id %>" data-participants="<%= entry.event_participants %>" >Add Participants</button>
               <button class="btn btn-secondary edit-event"
                 data-toggle="modal"
                 data-target="#editFormModal"
@@ -91,7 +100,7 @@
                 data-description="<%= entry.event_description %>">
                   <i class="far fa-edit"></i>
               </button>
-              <button class="btn btn-danger delete-event" data-id="<%= entry.event_id %>}"><i class="fas fa-times"></i></button>
+              <button class="btn btn-danger delete-event" data-id="<%= entry.event_id %>"><i class="fas fa-times"></i></button>
 
             </div>
       </div>
@@ -164,6 +173,38 @@
           </div>
       </div>
 
+      <!-- Add Participants Modal -->
+      <div class="modal fade" id="participantsFormModal" tabindex="-1" role="dialog" aria-labelledby="participantsFormModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="POST" action="/users/event_participants">
+                  <input type="hidden" id="participants-form-id" name="id">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="participantsFormModalLabel">Add service provider</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="form-group">
+                                  <label for="name">Username</label>
+                                  <input type="text" class="form-control" name="participants" id="participants-form-participants">
+                          </div>
+                          <!-- <div class="form-group">
+                                  <label for="name">Description</label>
+                                  <pre>
+                                      <textarea class="form-control" name="description" id="edit-form-description" rows="6"></textarea>
+                                  </pre>
+                          </div> -->
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <input type="submit" class="btn btn-success" value="Add"/>
+                      </div>
+                  </form>
+            </div>
+          </div>
+      </div>
 
 
         </div>

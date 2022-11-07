@@ -55,7 +55,7 @@
 
       <div class="section-title">
         <div class="">
-          <h2>Filter and Search accordingly</h2>
+          <h2>Your Invites</h2>
         </div>
         <br>
         <br>
@@ -63,20 +63,38 @@
 
 
 
-    <% service_provider.forEach(entry => { %>
+    <% event.forEach(entry => { %>
     <div class="card text-center">
       <div class="card-header">
-        <%= entry.sp_headline %>
+        <%= entry.event_name %>
       </div>
       <div class="card-body">
-        <h5 class="card-title"><%= entry.sp_username %></h5>
-        <p class="card-text"><%= entry.sp_description %></p>
-        <a href="#" class="btn btn-success">Chat</a>
-        <a href="/users/event" class="btn btn-success">Book</a>
+        <!-- <h5 class="card-title"><%= entry.sp_username %></h5> -->
+        <p class="card-text"><%= entry.event_description %></p>
+
+        <% if(entry.invite_status == 0){ %>
+          <form method="POST" action="/users/invite_accept">
+            <input type="hidden" id="a-form-id" name="id" value="<%= entry.event_id %>">
+            <input type="submit" class="btn btn-success" value="Accept"/>
+            <!-- <a href="/users/invite_accept" class="btn btn-success">Accept</a> -->
+          </form>
+          <form method="POST" action="/users/invite_reject">
+            <input type="hidden" id="a-form-id" name="id" value="<%= entry.event_id %>">
+            <input type="submit" class="btn btn-danger" value="Reject"/>
+            <!-- <a href="/users/invite_accept" class="btn btn-success">Accept</a> -->
+          </form>
+        <% } %>
+        <% if(entry.invite_status >0){ %>
+          <a href="#" class="btn btn-success diabled" aria-disabled="true">Accepted</a>
+        <% } %>
+        <% if(entry.invite_status <0){ %>
+          <a href="#" class="btn btn-danger diabled" aria-disabled="true">Rejected</a>
+        <% } %>
+
       </div>
-      <div class="card-footer text-muted">
+      <!-- <div class="card-footer text-muted">
         <%= entry.sp_speciality %>
-      </div>
+      </div> -->
     </div>
     <br><br><br>
     <% }) %>
