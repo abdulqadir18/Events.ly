@@ -337,6 +337,13 @@ app.get('/users/chat_box/:id', function(req, res){
       if(err){
         return console.error('Error running query',err);
       }
+      client.query('UPDATE chat set seen=1 where msg_reciever=$1 and msg_sender=$2 returning *',[my_id,other_id],function(err,result){
+        if(err){
+          return console.error('Error running query',err);
+        }
+        console.log(result.rows);
+      }
+        );
       console.log(result.rows);
       res.render('chat_box',{chat: result.rows, other_id: other_id});
       done();
@@ -357,6 +364,67 @@ app.post('/users/chat_add', function(req,res){
       res.redirect('/users/chat_box/'+req.body.reciever_id);
     });
   });
+});
+
+app.get('/users/my_chat', function(req,res){
+  pool.connect(function(err,client,done){
+    if(err){
+      return console.error('Error fetching client from pool',err);
+    }
+    console.log('login_id: ', my_id);
+    console.log('other_id: ', req.params.id);
+    var other_id=req.params.id;
+    client.query('SELECT distinct msg_sender,msg_reciever from chat where (msg_sender=$1) or (msg_reciever=$2)',[my_id,my_id],function(err,result){
+      if(err){
+        return console.error('Error running query',err);
+      }
+      console.log(result.rows);
+      res.render('my_chat',{chat: result.rows, my_id:my_id});
+      done();
+    });
+  });
+});
+
+app.get('/users/invite', function(req, res){
+  //PG connect
+  pool.connect(function(err,client,done){
+    if(err){
+      return console.error('Error fetching client from pool',err);
+    }
+    client.query("SELECT * from event WHERE event_participants = 'Khan'",function(err,result){
+      if(err){
+        return console.error('Error running query',err);
+      }
+      res.render('invite',{event: result.rows});
+      done();
+    });
+  });
+});
+ 
+app.post('/users/invite_accept', function (req, res) {
+  console.log(req.body.id);
+    pool.connect(function(err,client,done){
+      if(err){
+        return console.error('Error fetching client from pool',err);
+      }
+      client.query("UPDATE event SET invite_status = 1 WHERE event_id = $1 AND event_participants = 'Khan'", [req.body.id],function(err,result){
+        done();
+        res.redirect('/users/invite');
+      });
+    });
+});
+ 
+app.post('/users/invite_reject', function (req, res) {
+  console.log(req.body.id);
+    pool.connect(function(err,client,done){
+      if(err){
+        return console.error('Error fetching client from pool',err);
+      }
+      client.query("UPDATE event SET invite_status = -1 WHERE event_id = $1 AND event_participants = 'Khan'", [req.body.id],function(err,result){
+        done();
+        res.redirect('/users/invite');
+      });
+    });
 });
 
 app.listen(PORT, () => {

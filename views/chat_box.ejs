@@ -115,6 +115,7 @@
         </div>
       </div>
   <% } else{ chat.forEach(entry => { %>
+    <% if(entry.msg_sender==other_id) {%>
     <div id="friends-chat" class="friends-chat">
       <div class="profile friends-chat-photo">
         <img src="images/ava2.jpg" alt="">
@@ -125,8 +126,16 @@
         <h5 class="chat-datetime">Sun, Aug 30 | 15:41</h5>
       </div>
     </div>
-      <% }) }%>
+    <% } else { %>
+      <div id="your-chat" class="your-chat">
+        <p class="your-chat-balloon"><%= entry.msg %></p>
+        <p class="chat-datetime">
+          <% if(entry.seen==1) { %>
+            <span class="glyphicon glyphicon-ok"></span>
+         <% } %> Sun, Aug 30 | 15:45</p>
+      </div>
 
+    <%} }) }%>
 
   </div>
 
