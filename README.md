@@ -21,3 +21,6 @@ https://docs.google.com/document/d/18r7caaLhvHc7zV651qf6y_18cNja9cp4w2Qs4jOR8o8/
 
 4. Design Thinking PPT
 https://docs.google.com/presentation/d/1LAyQFbssISMGBbmUe1e6jwGY1fp1uD0GENjw54iwYkY/edit?usp=sharing
+
+5. Test Plan and Test Cases
+https://docs.google.com/spreadsheets/d/1dqhxsrtgqws1S5wbvZO_hb7snjcZH-Pk8WoJnqSCHnM/edit?usp=sharing
