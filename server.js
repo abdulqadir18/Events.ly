@@ -5,12 +5,18 @@ const bcrypt = require('bcrypt');
 const flash = require("express-flash");
 const session = require("express-session");
 const passport = require("passport");
+const nodemailer = require('nodemailer');
 
 const initializePassport = require("./passportConfig");
 
 initializePassport(passport);
 
 const PORT = process.env.PORT || 4000;
+
+//email of user
+var u_mail;
+var u_name;
+var u_type;
 
 app.set('view engine', "ejs");
 app.use(express.static(__dirname + '/public'));
@@ -115,10 +121,21 @@ app.post(
       failureRedirect: "/users/login",
       failureFlash: true
     })
+  //   });
+  // {
+  //   //getting details
+  //   client.query("SELECT * FROM login_details WHERE email=$1",[req.body.email],function(err,result){
+  //     console.log(result);
+  //     u_mail=result.mail;
+  //     u_type=result.type;
+  //     // res.render('query',{service_provider: result.rows});
+  //     done();
+  //   });
   );
 
   function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
+
       return res.redirect("/users/dashboard");
     }
     next();
@@ -148,14 +165,24 @@ app.post('/users/query', function(req,res){
       if(err){
         return console.error('Error fetching client from pool',err);
       }
-      if(s==1 && t==1)
+      //fixing event planner // BUG
+      if(t==1)
       {
-        client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Catering'",function(err,result){
+        client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Event Planner'",function(err,result){
           console.log(result);
           res.render('query',{service_provider: result.rows});
           done();
         });
       }
+
+      // if(s==1 && t==1)
+      // {
+      //   client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Catering'",function(err,result){
+      //     console.log(result);
+      //     res.render('query',{service_provider: result.rows});
+      //     done();
+      //   });
+      // }
       else if(s==1 && t==2)
       {
         client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='Catering'",function(err,result){
@@ -164,14 +191,14 @@ app.post('/users/query', function(req,res){
           done();
         });
       }
-      else if(s==2 && t==1)
-      {
-        client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Tenting'",function(err,result){
-          console.log(result);
-          res.render('query',{service_provider: result.rows});
-          done();
-        });
-      }
+      // else if(s==2 && t==1)
+      // {
+      //   client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Tenting'",function(err,result){
+      //     console.log(result);
+      //     res.render('query',{service_provider: result.rows});
+      //     done();
+      //   });
+      // }
       else if(s==2 && t==2)
       {
         client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='Tenting'",function(err,result){
@@ -180,14 +207,14 @@ app.post('/users/query', function(req,res){
           done();
         });
       }
-      else if(s==3 && t==1)
-      {
-        client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Transportation'",function(err,result){
-          console.log(result);
-          res.render('query',{service_provider: result.rows});
-          done();
-        });
-      }
+      // else if(s==3 && t==1)
+      // {
+      //   client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Transportation'",function(err,result){
+      //     console.log(result);
+      //     res.render('query',{service_provider: result.rows});
+      //     done();
+      //   });
+      // }
       else if(s==3 && t==2)
       {
         client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='Transportation'",function(err,result){
@@ -196,14 +223,14 @@ app.post('/users/query', function(req,res){
           done();
         });
       }
-      else if(s==4 && t==1)
-      {
-        client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Hall'",function(err,result){
-          console.log(result);
-          res.render('query',{service_provider: result.rows});
-          done();
-        });
-      }
+      // else if(s==4 && t==1)
+      // {
+      //   client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='Hall'",function(err,result){
+      //     console.log(result);
+      //     res.render('query',{service_provider: result.rows});
+      //     done();
+      //   });
+      // }
       else if(s==4 && t==2)
       {
         client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='Hall'",function(err,result){
@@ -212,17 +239,26 @@ app.post('/users/query', function(req,res){
           done();
         });
       }
-      else if(s==5 && t==1)
+      // else if(s==5 && t==1)
+      // {
+      //   client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='DJ'",function(err,result){
+      //     console.log(result);
+      //     res.render('query',{service_provider: result.rows});
+      //     done();
+      //   });
+      // }
+      else if(s==5 && t==2)
       {
-        client.query("SELECT * FROM service_provider WHERE sp_type='Event Planner' AND sp_speciality='DJ'",function(err,result){
+        client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='DJ'",function(err,result){
           console.log(result);
           res.render('query',{service_provider: result.rows});
           done();
         });
       }
+
       else
       {
-        client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='DJ'",function(err,result){
+        client.query("SELECT * FROM service_provider WHERE sp_type='Vendor' AND sp_speciality='Event Planner'",function(err,result){
           console.log(result);
           res.render('query',{service_provider: result.rows});
           done();
@@ -281,8 +317,43 @@ app.post('/users/event_participants', function (req, res) {
       if(err){
         return console.error('Error fetching client from pool',err);
       }
+
+      client.query('SELECT event_name FROM event WHERE event_id=$1',[req.body.id],function(err,result)
+      {
+        console.log(result.rows[0].event_name);
+        function mailSend(email)
+        {
+        var str="You have got an invite request for event ";
+        str+=result.rows[0].event_name;
+         var transporter = nodemailer.createTransport({
+           service: 'gmail',
+           auth: {
+             user: 'helloak2000@gmail.com',
+             pass: 'kuebcedlqirykvdf'
+           }
+         });
+
+         var mailOptions = {
+           from: 'helloak2000@gmail.com',
+           to: email,
+           subject: 'Event Invite',
+           text: str
+         };
+
+         transporter.sendMail(mailOptions, function(error, info){
+           if (error) {
+             console.log(error);
+           } else {
+             console.log('Email sent: ' + info.response);
+           }
+         });
+       }
+       mailSend("highsugarwatermelon46@gmail.com");
+      })
+
       client.query('UPDATE event SET event_participants = $1, invite_status = $2 WHERE event_id = $3', [req.body.participants, 0, req.body.id],function(err,result){
         done();
+
         res.redirect('/users/event');
       });
     });

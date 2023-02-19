@@ -1,3 +1,20 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
+    <title>Document</title>
+</head>
+<body>
+    <a href="/users/logout">Logout</a>
+    <h1>Dashboard <%= user %></h1>
+
+
+</body>
+</html> -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,9 +52,11 @@
 
           <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
-              <li><a class="nav-link scrollto" href="/users/dashboard">Home</a></li>
+              <li><a class="nav-link scrollto" href="/">Home</a></li>
               <li><a class="nav-link scrollto" href="#about">About</a></li>
               <li><a class="nav-link scrollto" href="#services">Services</a></li>
+              <li><a class="nav-link scrollto" href="/users/profile">Profile</a></li>
+              <li><a class="nav-link scrollto" href="/users/invite">Invites</a></li>
               <li><a class="nav-link scrollto" href="/users/logout">Logout</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
@@ -55,78 +74,41 @@
 
       <div class="section-title">
         <div class="">
-          <h2>Build your profile</h2>
+          <h1>Welcome <%= user %></h1>
         </div>
         <br>
         <br>
       </div>
 
-      <!-- <form class="" action="/users/query" method="post">
-        <div class="">
-          <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="type">
-            <option selected>Service Provider</option>
-            <option value="1" name="EP">Event Planner</option>
-            <option value="2" name="Vendor">Vendor</option>
-          </select>
-        </div>
-        <div class="">
-          <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="speciality">
-            <option selected>Speciality</option>
-            <option value="1" name="Catering">Catering</option>
-            <option value="2" name="Tenting">Tenting</option>
-            <option value="3" name="Transportation">Transportation</option>
-            <option value="4" name="Hall">Hall</option>
-            <option value="5" name="DJ">DJ</option>
-          </select>
-        </div>
-        <div class="search-button" style="align:center;">
-          <button type="submit" class="btn btn-success btn-lg center">Search</button>
-        </div>
-      </form> -->
+      <!-- Search -->
+      <div class="card text-center">
+        <div class="card-header">
 
-      <form method="POST" action="/users/profile_add">
-        <!-- <div class="modal-header">
-            <h5 class="modal-title" id="formModalLabel">Add Event</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-          </div> -->
-          <div class="modal-body">
-              <div class="form-group">
-                      <label for="name">Username</label>
-                      <input type="text" class="form-control" name="sp_username" id="sp_username" placeholder="Enter username">
-              </div>
-              <br><br>
-              <div class="form-group">
-                      <label for="name">Type</label>
-                      <input type="text" class="form-control" name="sp_type" id="sp_type" placeholder="Enter type">
-              </div>
-              <br><br>
-              <div class="form-group">
-                      <label for="name">Speciality</label>
-                      <input type="text" class="form-control" name="sp_speciality" id="sp_speciality" placeholder="Enter speciality">
-              </div>
-              <br><br>
-              <div class="form-group">
-                      <label for="name">Headline</label>
-                      <input type="text" class="form-control" name="sp_headline" id="sp_headline" placeholder="Enter headline">
-              </div>
-              <br><br>
-              <div class="form-group">
-                      <label for="name">Description</label>
-                      <pre>
-                          <textarea class="form-control" name="sp_description" id="sp_description" rows="6"></textarea>
-                      </pre>
-              </div>
-              <br><br>
-          </div>
-          <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-              <input type="submit" class="btn btn-success btn-lg" value="Save"/>
-          </div>
-      </form>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Search Service Providers</h5>
+          <p class="card-text">Look for the vendors and event planners according to your preferences.</p>
+          <a href="/users/search" class="btn btn-success">Search</a>
+        </div>
+        <!-- <div class="card-footer text-muted">
+          2 days ago
+        </div> -->
+      </div>
+      <br><br><br><br><br>
+      <!-- Create Event -->
+      <div class="card text-center">
+        <div class="card-header">
 
-
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Create and View Events</h5>
+          <p class="card-text">View your events and create new ones.</p>
+          <a href="/users/event" class="btn btn-success">Create</a>
+        </div>
+        <!-- <div class="card-footer text-muted">
+          2 days ago
+        </div> -->
+      </div>
 
     </div>
   </section><!-- End SearchS Section -->
